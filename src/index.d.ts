@@ -81,49 +81,49 @@ export class Pipe<TContext extends FilterContext> {
     /**
      * Append one or more filters to the existing list
      */
-    append(...filters: Filter<TContext>[]): void;
+    append(...filters: Filter<TContext>[]): Pipe<TContext>;
 
     /**
      * Prepend one or more filters to the existing list
      */
-    prepend(...filters: Filter<TContext>[]): void;
+    prepend(...filters: Filter<TContext>[]): Pipe<TContext>;
 
     /**
      * Add one ore more filters after the specified filter
      * @param filterName The name of the filter to insert before
      * @param filters Filters to be inserted
      */
-    after(filterName: string, ...filters: Filter<TContext>[]): void;
+    after(filterName: string, ...filters: Filter<TContext>[]): Pipe<TContext>;
 
     /**
      * Add one ore more filters before the specified filter
      * @param filterName The name of the filter to insert before
      * @param filters Filters to be inserted
      */
-    before(filterName: string, ...filters: Filter<TContext>[]): void;
+    before(filterName: string, ...filters: Filter<TContext>[]): Pipe<TContext>;
 
     /**
      * Replace the specified filter with one ore more filters
      * @param filterName The name of the filter to replace
      * @param filters Filters to be inserted
      */
-    replace(filterName: string, ...filters: Filter<TContext>[]): void;
+    replace(filterName: string, ...filters: Filter<TContext>[]): Pipe<TContext>;
 
     /**
      * Remove the filter with the specified name
      * @param filterName The name of the filter to remove
      */
-    remove(filterName: string): void;
+    remove(filterName: string): Pipe<TContext>;
 
     /**
      * Remove all filters from this pipe
      */
-    clear(): void;
+    clear(): Pipe<TContext>;
 
     /**
      * Return array of ordered filter names for this pipe
      */
-    list(): void;
+    list(): Pipe<TContext>;
 }
 
 export class Processor {
