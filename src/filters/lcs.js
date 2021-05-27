@@ -4,6 +4,35 @@ LCS implementation that supports arrays or strings
 
 reference: http://en.wikipedia.org/wiki/Longest_common_subsequence_problem
 
+TODO:
+I've noticed some performance lag in this implementation of LCS with exceptionally long lists as well. In part because it creates so many objects, forcing a number of garbage collections throughout, and because of a number of repeat comparisons, nested loops, and duplicated logic.
+
+The entire matrix can be represented in a single array of
+
+```js
+const matrix = new Array((len1+1) * (len2+1));
+```
+
+You can access any index (computed as needed) in the nested for loops by using:
+
+```js
+const idx = (x * len1) + y;
+const above = (x * len1) + y - 1;
+const left = ((x - 1) * len1) + y ;
+```
+And most importantly, the new Array call does not need any instantiation. Instead, start the loops from 0 and use:
+
+```js
+if (x === 0) { matrix[idx] = len1; }
+else if (y === 0) { matrix[idx] = len2; )
+```
+
+before an other logic to fill default values in the same nested loop as the rest of the LCS logic.
+
+Math.max can also be a hair slower than a simple ternary operation too and should be replaced.
+
+Experimenting with the above changes, I was able to eke out an half second of performance gains from a ~3s) LCS comparison of two 10,000 item string arrays. Would be great to see it formalized and integrated!
+
 */
 
 const defaultMatch = function(array1, array2, index1, index2) {
