@@ -1,8 +1,35 @@
-export interface Formatter {
-    format(delta: Delta, original: any): string;
+export type DeltaType = 'movedestination' | 'unchanged' | 'added' | 'modified' | 'deleted' | 'textdiff' | 'moved' | 'node' | 'unknown'
+export class BaseFormatter {
+  format(delta: Delta, original: any): string;
+  prepareContext(context: Context): void;
+  typeFormattterNotFound(context: Context, deltaType: DeltaType): void;
+  typeFormattterErrorFormatter(context: Context, err): void;
+  finalize(context: Context): void;
+  recurse(context: Context, delta: Delta, left, key?, leftKey?, movedFrom?, isLast?): void;
+  formatDeltaChildren(context: Context, delta: Delta, left): void;
+  forEachDeltaKey(delta: Delta, left, fn: (key, leftKey, movedFrom, isLast) => void): void;
+  getDeltaType(delta: Delta, movedFrom?): string;
+  parseTextDiff(value: string): any[];
+
+  format_movedestination(context: Context, delta?: Delta, leftValue?, key?, leftKey?, movedFrom?): void;
+  format_unchanged(context: Context, delta?: Delta, leftValue?, key?, leftKey?, movedFrom?): void;
+  format_added(context: Context, delta?: Delta, leftValue?, key?, leftKey?, movedFrom?): void;
+  format_modified(context: Context, delta?: Delta, leftValue?, key?, leftKey?, movedFrom?): void;
+  format_deleted(context: Context, delta?: Delta, leftValue?, key?, leftKey?, movedFrom?): void;
+  format_textdiff(context: Context, delta?: Delta, leftValue?, key?, leftKey?, movedFrom?): void;
+  format_moved(context: Context, delta?: Delta, leftValue?, key?, leftKey?, movedFrom?): void;
+  format_unknown(context: Context, delta?: Delta, leftValue?, key?, leftKey?, movedFrom?): void;
+  nodeBegin(context: Context, key, leftKey, type, nodeType, isLast): void;
+  rootBegin(context: Context, type, nodeType): void;
+  nodeEnd(context: Context, key, leftKey, type, nodeType, isLast): void;
+  rootEnd(context: Context, type, nodeType): void;
+}
+export interface IFormatter {
+  default: typeof BaseFormatter;
+  format(delta: Delta, original: any): string;
 }
 
-export interface HtmlFormatter extends Formatter {
+export interface IHtmlFormatter extends IFormatter {
     /**
      * Set whether to show or hide unchanged parts of a diff.
      * @param show Whether to show unchanged parts
@@ -187,12 +214,13 @@ export class DiffPatcher {
 export const create: (options?: any) => DiffPatcher
 
 export const formatters: {
-  annotated: Formatter;
-  console: Formatter;
-  html: HtmlFormatter;
+  base: IFormatter;
+  annotated: IFormatter;
+  console: IFormatter;
+  html: IHtmlFormatter;
 };
 
-export const console: Formatter
+export const console: IFormatter
 
 export const dateReviver: (key: string, value: any) => any;
 
