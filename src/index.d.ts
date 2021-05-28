@@ -192,6 +192,51 @@ export const formatters: {
   html: HtmlFormatter;
 };
 
+export const contexts: {
+  Context: typeof Context;
+  DiffContext: typeof DiffContext;
+  PatchContext: typeof PatchContext;
+  ReverseContext: typeof ReverseContext;
+};
+
+export const filters: {
+  arrays: {
+    diffFilter(context: Context),
+    patchFilter(context: Context),
+    collectChildrenPatchFilter(context: Context),
+    reverseFilter(context: Context),
+    collectChildrenReverseFilter(context: Context),
+  };
+  dates: {
+    diffFilter(context: Context),
+  };
+  nested: {
+    objectsDiffFilter(context: Context),
+    collectChildrenDiffFilter(context: Context),
+    patchFilter(context: Context),
+    collectChildrenPatchFilter(context: Context),
+    collectChildrenReverseFilter(context: Context),
+    reverseFilter(context: Context),
+  };
+  texts: {
+    diffFilter(context: Context),
+    patchFilter(context: Context),
+    reverseFilter(context: Context),
+  };
+  trivial: {
+    diffFilter(context: Context),
+    patchFilter(context: Context),
+    reverseFilter(context: Context),
+  };
+  lcs: {
+    get(array1:string|any[], array2:string|any[], match?, context?): {
+      sequence: string|any[],
+      indices1: any[],
+      indices2: any[],
+    }
+  }
+};
+
 export const console: Formatter
 
 export const dateReviver: (key: string, value: any) => any;
