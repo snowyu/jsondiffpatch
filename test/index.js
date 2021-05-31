@@ -5,6 +5,7 @@
 import * as jsondiffpatch from '../build/jsondiffpatch.esm';
 import examples from './examples/diffpatch';
 import chai from 'chai';
+import {inspect} from 'util';
 
 import lcs from '../src/filters/lcs';
 const expect = chai.expect;
@@ -723,6 +724,94 @@ describe('DiffPatcher', () => {
             ],
           },
         ];
+        expectFormat(before, after, expectedHtml(expectedDiff));
+      });
+    });
+
+    describe('htmlEx', () => {
+      let instance;
+      let formatter;
+
+      before(() => {
+        instance = new DiffPatcher({ textDiff: { minLength: 10 } });
+        formatter = jsondiffpatch.formatters.htmlEx;
+      });
+
+      const expectFormat = (before, after, expected) => {
+        const diff = instance.diff(before, after);
+        const format = formatter.format(diff);
+        expect(format).to.be.eql(expected);
+      };
+
+      function formatValue(key, value, nodeType, parent = []) {
+        const result = []
+        let type
+        if (value.length === 1) {
+          type = 'added'
+        } else if (value.length === 2) {
+          type = 'modified'
+        } else if (value.length === 3) {
+          type = 'deleted'
+        }
+        const originalValue = typeof value[0] === 'string' ? `&quot;${value[0]}&quot;` : value[0]
+        const isArrDel = (nodeType === 'array' && type === 'deleted')
+        const vKey = [...parent, key].join('.')
+        result.push(`<div class="jsondiffpatch-property-name"><input type="checkbox" id="jsondiffpatchCB-${vKey}"> ${isArrDel ? key.slice(1) : key}</div>`)
+        result.push(`<div class="jsondiffpatch-value"><pre>${originalValue}</pre></div>`)
+        result.unshift(`<li class="jsondiffpatch-${type}" data-key="${isArrDel ? key.slice(1) : key}">`)
+        result.push(`</li>`)
+        return result;
+      }
+      function formatObject(expectedDiff, aPath = []) {
+        const html = []
+        const nodeType = expectedDiff._t === 'a' ? 'array' : 'object';
+        const nodeClass = `jsondiffpatch-node${
+          nodeType ? ` jsondiffpatch-node-type-${nodeType}` : ''
+        }`;
+        const keys = nodeType === 'array' ? ['0', '_1', '2'] : Object.keys(expectedDiff)
+        keys.forEach(item => {
+          const value = expectedDiff[item];
+          if (Array.isArray(value)) {
+            const v = formatValue(item, value, nodeType, aPath)
+            html.push(...v)
+          } else if (typeof value === 'object') {
+            aPath.push(item)
+            const v = formatObject(value, aPath)
+            aPath.pop()
+            const vNodeType = value._t === 'a' ? 'array' : 'object'
+            v.unshift(`<li class="jsondiffpatch-node jsondiffpatch-child-node-type-${vNodeType}" data-key="${item}"><div class="jsondiffpatch-property-name">${item}</div>`)
+            v.push(`</li>`)
+            html.push(...v)
+          }
+        })
+        html.unshift(`<ul class="${nodeClass}">`)
+        html.push('</ul>')
+        return html
+      }
+
+      const expectedHtml = (expectedDiff) => {
+        const html = formatObject(expectedDiff)
+        return (
+          `<div class="jsondiffpatch-delta jsondiffpatch-node jsondiffpatch-child-node-type-object">` +
+          `${html.join('')}</div>`
+        );
+      };
+
+      it('should format via htmlEx', () => {
+        const before = {a: 'hi', c: {i: 12, arr: ['hello', 'world']}};
+        const after = {a: 'hi', b: 'new', c: {arr: ['start', 'hello', 'end']}};
+        const expectedDiff = {
+          b: [ 'new' ],
+          c: {
+            arr: {
+              '0': [ 'start' ],
+              '_1': [ 'world', 0, 0 ],
+              '2': [ 'end' ],
+              '_t': 'a',
+            },
+            i: [ 12, 0, 0 ],
+          },
+        };
         expectFormat(before, after, expectedHtml(expectedDiff));
       });
     });

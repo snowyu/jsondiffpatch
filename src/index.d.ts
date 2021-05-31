@@ -19,9 +19,9 @@ export class BaseFormatter {
   format_textdiff(context: Context, delta?: Delta, leftValue?, key?, leftKey?, movedFrom?): void;
   format_moved(context: Context, delta?: Delta, leftValue?, key?, leftKey?, movedFrom?): void;
   format_unknown(context: Context, delta?: Delta, leftValue?, key?, leftKey?, movedFrom?): void;
-  nodeBegin(context: Context, key, leftKey, type, nodeType, isLast): void;
+  nodeBegin(context: Context, key?, leftKey?, type?, nodeType?, isLast?): void;
   rootBegin(context: Context, type, nodeType): void;
-  nodeEnd(context: Context, key, leftKey, type, nodeType, isLast): void;
+  nodeEnd(context: Context, key?, leftKey?, type?, nodeType?, isLast?): void;
   rootEnd(context: Context, type, nodeType): void;
 }
 export interface IFormatter {
@@ -218,6 +218,7 @@ export const formatters: {
   annotated: IFormatter;
   console: IFormatter;
   html: IHtmlFormatter;
+  htmlEx: IHtmlFormatter;
 };
 
 export const console: IFormatter
