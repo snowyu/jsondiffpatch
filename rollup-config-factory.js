@@ -243,21 +243,20 @@ function copyFromFolderToDist(folder) {
 }
 
 function createEmptyModuleDist() {
-  return function() {
-    let executed = false;
-    return {
-      ongenerate: () => {
-        if (executed) {
-          return;
-        }
-        const distFilename = path.join(__dirname, 'dist', 'empty.js');
-        mkdirp(path.dirname(distFilename));
-        fs.writeFileSync(distFilename, '');
-        console.log(`dist/empty.js (created)`);
-        executed = true;
-      },
-    };
-  };
+  let executed = false;
+  return {
+    name: 'createEmptyModule',
+    ongenerate() {
+      if (executed) {
+        return;
+      }
+      const distFilename = path.join(__dirname, 'dist', 'empty.js');
+      mkdirp(path.dirname(distFilename));
+      fs.writeFileSync(distFilename, '', {encoding: 'utf8'});
+      console.log(`dist/empty.js (created)`);
+      executed = true;
+    },
+  }
 }
 
 function outputExternal(names) {
