@@ -246,6 +246,7 @@ function createEmptyModuleDist() {
   let executed = false;
   return {
     name: 'createEmptyModule',
+    // TODO: use generateBundle instead of ongenerate when upgrading rollup.
     ongenerate() {
       if (executed) {
         return;
