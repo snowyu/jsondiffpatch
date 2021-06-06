@@ -15,7 +15,7 @@ export class HtmlExFormatter extends HtmlFormatter {
     const vIsTargetKey = !nodeType && type !== 'unchanged' && type !== 'movedestination' && type !== 'unknown';
     const vKeyPath = vIsTargetKey ? [...this.parentPath, key].join('.') : '';
     const vCheckbox = vIsTargetKey ?
-      `<input type="checkbox" id="jsondiffpatchCB-${vKeyPath}"> ` : '';
+      `<input type="checkbox" id="jsondiffpatchCB-${vKeyPath}" checked> ` : '';
     context.out(
       `<li class="${nodeClass}" data-key="${leftKey}">` +
         `<div class="jsondiffpatch-property-name">${vCheckbox}${leftKey}</div>`
