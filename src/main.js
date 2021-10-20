@@ -2,6 +2,8 @@ import DiffPatcher from './diffpatcher';
 export { default as DiffPatcher } from './diffpatcher';
 
 export * as formatters from './formatters/index';
+export * as contexts from './contexts/index';
+export * as filters from './filters/index';
 
 export * as console from './formatters/console';
 

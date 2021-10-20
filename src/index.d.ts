@@ -221,6 +221,45 @@ export const formatters: {
   htmlEx: IHtmlFormatter;
 };
 
+export const contexts: {
+  Context: typeof Context;
+  DiffContext: typeof Context;
+  PatchContext: typeof Context;
+  ReverseContext: typeof Context;
+}
+
+export const filters: {
+  lcs: {get: Function};
+  arrays: {
+    diffFilter: Filter;
+    patchFilter: Filter;
+    reverseFilter: Filter;
+    collectChildrenPatchFilter: Filter;
+    collectChildrenReverseFilter: Filter;
+  };
+  dates: {
+    diffFilter: Filter;
+  };
+  nested: {
+    objectsDiffFilter: Filter;
+    patchFilter: Filter;
+    reverseFilter: Filter;
+    collectChildrenDiffFilter: Filter;
+    collectChildrenPatchFilter: Filter;
+    collectChildrenReverseFilter: Filter;
+  };
+  texts: {
+    diffFilter: Filter;
+    patchFilter: Filter;
+    reverseFilter: Filter;
+  };
+  trivial: {
+    diffFilter: Filter;
+    patchFilter: Filter;
+    reverseFilter: Filter;
+  }
+}
+
 export const console: IFormatter
 
 export const dateReviver: (key: string, value: any) => any;
