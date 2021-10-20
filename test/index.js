@@ -5,7 +5,7 @@
 import * as jsondiffpatch from '../build/jsondiffpatch.esm';
 import examples from './examples/diffpatch';
 import chai from 'chai';
-import {inspect} from 'util';
+// import {inspect} from 'util';
 
 import lcs from '../src/filters/lcs';
 const expect = chai.expect;
